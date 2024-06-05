@@ -108,6 +108,37 @@ scenarios:
         scenario: Rps
         host: "{{secondaryAddress}}"
 
+  rps-c:
+    server:
+      job: quicServer
+      agent: secondary
+    client:
+      job: quicClientWithCustomMsQuic
+      agent: main
+      variables:
+        scenario: Rps
+        host: "{{secondaryAddress}}"
+  
+  normal-client:
+    server:
+      job: quicServer
+      agent: secondary
+    client:
+      job: quicClient
+      agent: main
+      variables:
+        host: "{{secondaryAddress}}"
+  
+  custom-client:
+    server:
+      job: quicServer
+      agent: secondary
+    client:
+      job: quicClientWithCustomMsQuic
+      agent: main
+      variables:
+        host: "{{secondaryAddress}}"
+
 jobs:
   quicServer:
     source:
@@ -120,10 +151,25 @@ jobs:
 
   quicClient:
     source:
-      repository: https://github.com/aspnet/benchmarks.git
-      branchOrCommit: main
-      project: src/System/Net/Benchmarks/Apps/Tls/Quic/Client/QuicClient.csproj
+        # repository: https://github.com/aspnet/benchmarks.git
+        localFolder: C:/Users/aaksoy/Desktop/dotnet/Benchmarks
+        # branchOrCommit: main
+        project: src/System/Net/Benchmarks/Apps/Tls/Quic/Client/QuicClient.csproj
     isConsoleApp: true
     waitForExit: true
     timeout: 300 #seconds
     arguments: "--host {{host}} --port {{serverPort}} --receive-buffer-size {{receiveBufferSize}} --send-buffer-size {{sendBufferSize}} --cert-selection {{clientCertSelection}} --scenario {{scenario}} --connections {{connections}} --streams {{streams}} --warmup {{warmup}} --duration {{duration}}"
+
+  quicClientWithCustomMsQuic:
+    source:
+        # repository: https://github.com/aspnet/benchmarks.git
+        localFolder: C:/Users/aaksoy/Desktop/dotnet/Benchmarks
+        # branchOrCommit: main
+        project: src/System/Net/Benchmarks/Apps/Tls/Quic/Client/QuicClient.csproj
+    isConsoleApp: true
+    waitForExit: true
+    timeout: 300 #seconds
+    arguments: "--host {{host}} --port {{serverPort}} --receive-buffer-size {{receiveBufferSize}} --send-buffer-size {{sendBufferSize}} --cert-selection {{clientCertSelection}} --scenario {{scenario}} --connections {{connections}} --streams {{streams}} --warmup {{warmup}} --duration {{duration}}"
+    options:
+      outputFiles:
+        - "C:/Users/aaksoy/Desktop/microsoft/msquic/artifacts/bin/windows/x64_Release_schannel/msquic.dll"

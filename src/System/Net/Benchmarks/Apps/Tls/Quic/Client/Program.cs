@@ -5,6 +5,11 @@ using System.Net;
 using System.Net.Quic;
 using System.Net.Benchmarks.Tls;
 using System.Net.Benchmarks.Tls.QuicBenchmark;
+using System.Diagnostics;
+
+var versionInfo = FileVersionInfo.GetVersionInfo("msquic.dll");
+Console.WriteLine(versionInfo?.FileVersion ?? "msquic.dll not found");
+Console.WriteLine(Path.GetFullPath("msquic.dll"));
 
 return await QuicBenchmarkClient.RunAsync(args).ConfigureAwait(false);
 
